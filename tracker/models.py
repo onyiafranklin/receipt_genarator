@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -20,7 +20,7 @@ class Track(models.Model):
         max_length=10
         )
     amount = models.FloatField(
-        validators=[MinValueValidator(100.0)], 
+        validators=[MinValueValidator(0.1), MaxValueValidator(100000000)], 
         null=False, 
         blank=False
         )
