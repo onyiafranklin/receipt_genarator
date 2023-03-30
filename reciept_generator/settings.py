@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-inu5%l*e3nz&r6qbel!_o767oy+si%%egeqs@c)x1u+vi9e81j
 DEBUG = True
 CORS_ALLOW_ALL_ORIGINS = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'fianancetracker-env.eba-zzxqpwbf.us-east-1.elasticbeanstalk.com']
 
 
 # Application definition
