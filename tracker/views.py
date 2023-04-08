@@ -1,3 +1,8 @@
+from datetime import datetime
+
+from django.shortcuts import get_list_or_404
+from django.http import Http404
+
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
@@ -7,19 +12,42 @@ from rest_framework.response import Response
 from .serializers import TrackSerializer, CreateTransactionSerializer
 from .models import Track
 
+
 class FetchTransactionView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = TrackSerializer
 
-    def post(self, request):
-        serializer = self.get_serializer(data=request.data)
+    def get_object(self):
+        query = Track.objects.filter(user=self.request.user)
 
-        serializer.is_valid(raise_exception=True)
+        if "month" in self.request.GET:
+            month = self.request.GET["month"]
+            if not month.isdigit():
+                raise Http404("Invalid Month")
 
-        year = serializer.validated_data["year"]
-        month = serializer.validated_data["month"]
+            month = int(month)
+            if month < 1 or month > 12:
+                raise Http404("Invalid Month")
 
-        query = Track.objects.filter(date__month=month, date__year=year, user=request.user)
+            query = query.filter(date__month=month)
+
+        if "year" in self.request.GET:
+            year = self.request.GET["year"]
+            if not year.isdigit():
+                raise Http404("Invalid Year")
+
+            year = int(year)
+            curr_year = datetime.now().year
+            if year < curr_year - 20 or year > curr_year:
+                raise Http404("Invalid Year")
+
+            query = query.filter(date__year=year)
+
+        return query
+
+    def get(self, request):
+
+        query = self.get_object()
 
         serializer = self.get_serializer(many=True, instance=query)
 
@@ -39,3 +67,15 @@ class AddTransactionView(generics.CreateAPIView):
 
     permission_classes = [IsAuthenticated]
     serializer_class = CreateTransactionSerializer
+
+
+class ListCategoriesView(generics.ListAPIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        categories = []
+        for category, _ in Track.categories:
+            categories += (category,)
+
+        return Response(categories)
