@@ -44,7 +44,7 @@ class AccountSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     {'email': 'Email address is disabled'})
             elif e.response['Error']['Code'] == 'AuthorizationError':
-                raise serializers.ValidationError('Authorization error: {e}')
+                raise serializers.ValidationError(f'Authorization error: {e}')
             else:
                 raise serializers.ValidationError(f'Unexpected error: {e}')
 
