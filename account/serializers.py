@@ -2,6 +2,8 @@
 from django.conf import settings
 
 import boto3
+from botocore.exceptions import ClientError
+
 
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework import serializers
@@ -31,8 +33,21 @@ class AccountSerializer(serializers.ModelSerializer):
         password = validated_data.pop("password")
         user = self.Meta.model(**validated_data)
         client = boto3.client('sns', region_name=settings.AWS_REGION)
-        response = client.subscribe(
-            TopicArn=settings.SNS_TOPIC_ARN, Protocol='email', Endpoint=user.email)
+        try:
+            response = client.subscribe(
+                TopicArn=settings.SNS_TOPIC_ARN, Protocol='email', Endpoint=user.email)
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'InvalidParameter':
+                raise serializers.ValidationError(
+                    {'email': 'Invalid email address'})
+            elif e.response['Error']['Code'] == 'EndpointDisabled':
+                raise serializers.ValidationError(
+                    {'email': 'Email address is disabled'})
+            elif e.response['Error']['Code'] == 'AuthorizationError':
+                raise serializers.ValidationError('Authorization error: {e}')
+            else:
+                raise serializers.ValidationError(f'Unexpected error: {e}')
+
         user.subscribe_arn = response['SubscriptionArn']
         user.set_password(password)
         user.save()
