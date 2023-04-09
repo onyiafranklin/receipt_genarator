@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
+    'oauth',
     'account',
     'tracker'
 ]
@@ -60,7 +61,7 @@ ROOT_URLCONF = 'reciept_generator.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/"templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -144,4 +145,15 @@ REST_FRAMEWORK = {
     ]
 }
 
+OAUTH2_PROVIDER = {
+    # this is the list of available scopes
+    'SCOPES': {'add-application': 'Copy Histroy From wallet to Finance Tracker'}
+}
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR/"static"]
 AUTH_USER_MODEL = "account.Account"
+LOGIN_URL = '/oauth/login/'
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET"),
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_REDIRECT_URL = os.getenv("GOOGLE_REDIRECT_URL")

@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Fin Track" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&amp;family=Raleway:wght@400;500;600;700&amp;display=swap"
+    rel="stylesheet" />
+  <title>Financial Tracker</title>
+  <link rel="stylesheet" href="{% static 'css/main.47d816e8.css' %}">
+  <!-- <script defer="" src="js/bundle.js"></script> -->
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root">
+    <div class="w-full">
+      <header class="w-full fixed top-0 left-0 z-40 shadow-sm bg-white">
+        <div class="container mx-auto py-4 flex items-center justify-between px-2 sm:px-0">
+          <a href="/"><img src="{% static 'media/logo-home.a479142bc7f44e9abe6601402af94553.svg' %}"
+              alt="Logo for FinTrack" /></a>
+          <div class="flex flex-row items-center justify-between space-x-10">
+            <a class="text-lg font-medium text-black focus:underline hover:underline flex"
+              href="/login"><span>Login</span></a><a
+              class="rounded-md items-center text-lg font-medium px-8 py-3.5 bg-primary text-white drop-shadow-lg outline-offset-2 outline-primary outline-1 focus:outline active:drop-shadow-none hover:underline hover:bg-primaryLight flex"
+              href="/signup"><span>Sign up</span></a>
+          </div>
+        </div>
+      </header>
+      <main class="pt-[83px] pb-12">
+        <aside id="content" class="w-full bg-zinc-20 bg-primary">
+          <div class="container mx-auto pt-8 pb-24 sm:py-16 sm:pb-20 flex items-center justify-center">
+            <a href="/"><img src="{% static 'media/logo-white.9eb2d2d1287233cbc37f8450fcc194f7.svg' %}"
+                alt="Logo for FinTrack" /></a>
+          </div>
+        </aside>
+        <section id="formWrapper" class="w-full">
+          <div class="container mx-auto py-10 flex flex-col lg:flex-row">
+            <article class="w-full flex justify-center items-center py-10">
+              <div
+                class="bg-white -mt-32 rounded-xl p-6 max-w-3xl w-full space-y-2 flex flex-col items-center drop-shadow-lg sm:p-10 sm:py-12 md:mx-0">
+                <div class="flex flex-col justify-center w-full">
+                  <h1 class="font-serif text-[40px] text-center font-bold text-black mb-10">
+                    Login
+                  </h1>
+                  <div class="flex items-start gap-x-16">
+                    <div class="w-1/2 pr-6 border-r self-stretch border-zinc-100">
+                      <p class="text-lg text-black mb-4">
+                        Using social networking accounts
+                      </p>
+                      <div class="flex flex-col gap-4">
+                        <a href="https://google.com" rel="noopener noreferrer"
+                          class="group text-google text-xl py-3 px-5 rounded-md border border-google flex items-center gap-6 w-max"><img
+                            src="{% static 'media/google.fc40d321a3cc20d067af60c05c496b2c.svg' %}"
+                            class="h-6 w-6 transition-transform" alt="Google logo" /><span
+                            class="group-hover:underline">Login with Google</span></a>
+                      </div>
+                    </div>
+                    <article class="w-1/2 flex flex-col items-center px-4 md:px-0 lg:items-start">
+                      <form id="contact-form" method="post" class="w-full space-y-4 sm:space-y-4">
+                        {% csrf_token %}
+                        <div class="flex flex-col space-y-2">
+                          <label for="username" class="text-base font-semibold dark:text-zinc-100">Username
+                            <span class="text-red-600 dark:text-red-400"></span></label>
+                          <div>
+                            {{form.username}}
+                            <span class="mt-[2px] text-red-600 dark:text-red-400 text-base hidden"></span>
+                          </div>
+                        </div>
+                        <div class="flex flex-col space-y-2">
+                          <label for="password" class="text-base font-semibold dark:text-zinc-100">Password
+                            <span class="text-red-600 dark:text-red-400"></span></label>
+                          <div>
+                            {{form.password}}
+                            <span class="mt-[2px] text-red-600 dark:text-red-400 text-base hidden"></span>
+                          </div>
+                        </div>
+                        <div class="flex justify-center mt-8 sm:mt-10">
+                          <button type="submit"
+                            class="flex flex-row items-center text-base font-semibold px-5 py-4 bg-primary rounded-md w-full justify-center text-white gap-x-2 drop-shadow-lg disabled:opacity-50 disabled:cursor-not-allowed outline-offset-2 outline-primary outline-1 focus:outline active:drop-shadow-none hover:underline hover:bg-primaryLight">
+                            <span class="text-lg sm:text-xl">Login</span>
+                          </button>
+                        </div>
+                      </form>
+                      <a class="text-lg text-black mt-5 group" href="/signup">Don't have an account?
+                        <span class="text-primary group-hover:underline">Register</span></a>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+      <footer class="w-full bg-zinc-100 fixed bottom-0 py-2">
+        <div class="container mx-auto flex flex-row items-center justify-center px-5 sm:px-2 md:px-0">
+          <p class="text-base sm:text-lg text-black">
+            FT ©2023, FinTrack - All Rights Reserved
+          </p>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script src="https://accounts.google.com/gsi/client" async="" defer=""></script>
+</body>
+
+</html>
