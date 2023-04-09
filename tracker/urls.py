@@ -7,5 +7,7 @@ app_name = "tracker"
 urlpatterns = [
     path("", views.FetchTransactionView.as_view(), name="transactions"),
     path("add/", views.AddTransactionView.as_view(), name="add"),
-    path("list-categories/", views.ListCategoriesView.as_view(), name="categories")
+    path("list-categories/", views.ListCategoriesView.as_view(), name="categories"),
+    path("reciept/<uuid:id>/", views.GenerateReceiptView.as_view(),
+         name="generate-reciept")
 ]

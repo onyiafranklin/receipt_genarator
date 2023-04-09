@@ -47,6 +47,8 @@ class Account(AbstractUser):
         null=False,
         unique=True
     )
+    subscribe_arn = models.TextField(null=True, unique=True)
+
     is_staff = models.BooleanField(
         _("staff status"),
         default=False,

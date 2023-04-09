@@ -1,6 +1,9 @@
+import boto3
+from botocore.exceptions import ClientError
 from datetime import datetime
 
-from django.shortcuts import get_list_or_404
+from django.shortcuts import get_object_or_404
+from django.conf import settings
 from django.http import Http404
 
 from rest_framework import generics
@@ -79,3 +82,50 @@ class ListCategoriesView(generics.ListAPIView):
             categories += (category,)
 
         return Response(categories)
+
+
+class GenerateReceiptView(generics.GenericAPIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        id = self.kwargs["id"]
+        obj = get_object_or_404(Track, id=id)
+        return obj
+
+    def get(self, request):
+        client = boto3.client('sns', region_name=settings.AWS_REGION)
+        obj = self.get_object()
+        try:
+            response = client.publish(
+                TopicArn=settings.SNS_TOPIC_ARN,
+                Message=f'''
+                    Requested Reciept For Finance Tracker
+
+                {request.user.username} Performed A Transaction of ${obj.amount}
+                Under the Category of {obj.category}
+
+                at {obj.date}
+                ''',
+                Subject="Recipet Report",
+                MessageStructure='string',
+                MessageAttributes={
+                    'email': {
+                        'DataType': 'String',
+                        'StringValue': request.user.email,
+                    }
+                },
+                TargetArn=response['SubscriptionArn']
+            )
+        except ClientError as e:
+            error = e.response['Error']
+            if error['Code'] == 'TargetNotSubscribed':
+                # The TargetArn has not accepted the subscription
+                error_message = 'The subscription confirmation has not been accepted. Please check your email for the confirmation link.'
+                return Response({'success': False, 'error': error_message})
+            else:
+                # Other error occurred
+                error_message = f'{error["Code"]}: {error["Message"]}'
+                return Response({'success': False, 'error': error_message})
+
+        return Response({"success": True, "message": "Reciept Has been Sent to your email"}, status=status.HTTP_200_OK)

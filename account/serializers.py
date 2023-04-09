@@ -1,3 +1,8 @@
+
+from django.conf import settings
+
+import boto3
+
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework import serializers
 
@@ -24,7 +29,14 @@ class AccountSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
 
-        return self.Meta.model.objects.create_user(**validated_data)
+        user = self.Meta.model.objects.create_user(**validated_data)
+        client = boto3.client('sns', region_name=settings.AWS_REGION)
+        response = client.subscribe(
+            TopicArn=settings.SNS_TOPIC_ARN, Protocol='email', Endpoint=user.email)
+        user.subscribe_arn = response['SubscriptionArn']
+        user.save()
+
+        return user
 
     def update(self, instance, validated_data):
 
@@ -54,21 +66,6 @@ class LoginSerilizer(serializers.Serializer):
             raise serializers.ValidationError("invalid Credentials")
 
         attrs["user"] = user
-
-        return attrs
-
-
-class OauthLoginSerilizer(LoginSerilizer):
-
-    def validate(self, attrs):
-
-        user_token = authenticate(
-            username=attrs["username"], password=attrs["password"])
-
-        if not user_token:
-            raise serializers.ValidationError("invalid Credentials")
-
-        attrs["user"], attrs["token"] = user_token
 
         return attrs
 
