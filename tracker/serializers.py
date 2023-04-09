@@ -10,6 +10,7 @@ class TrackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Track
         fields = [
+            "id",
             "category",
             "amount",
             "date",
