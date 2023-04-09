@@ -28,12 +28,13 @@ class AccountSerializer(serializers.ModelSerializer):
         self.fields["password"].write_only = True
 
     def create(self, validated_data):
-
-        user = self.Meta.model.objects.create_user(**validated_data)
+        password = validated_data.pop("password")
+        user = self.Meta.model(**validated_data)
         client = boto3.client('sns', region_name=settings.AWS_REGION)
         response = client.subscribe(
             TopicArn=settings.SNS_TOPIC_ARN, Protocol='email', Endpoint=user.email)
         user.subscribe_arn = response['SubscriptionArn']
+        user.set_password(password)
         user.save()
 
         return user
