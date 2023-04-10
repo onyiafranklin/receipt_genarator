@@ -98,7 +98,6 @@ class GenerateReceiptView(generics.GenericAPIView):
         obj = self.get_object()
         try:
             response = client.publish(
-                TopicArn=settings.SNS_TOPIC_ARN,
                 Message=f'''
                     Requested Reciept For Finance Tracker
 
