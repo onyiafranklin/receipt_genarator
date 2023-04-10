@@ -115,7 +115,7 @@ class GenerateReceiptView(generics.GenericAPIView):
                         'StringValue': request.user.email,
                     }
                 },
-                TargetArn=response['SubscriptionArn']
+                TargetArn=request.user.subscribe_arn
             )
         except ClientError as e:
             error = e.response['Error']
