@@ -165,3 +165,9 @@ BOOK_STORE_CLIENT_ID = os.getenv("BOOK_STORE_CLIENT_ID")
 BOOK_STORE_CLIENT_SECRET = os.getenv("BOOK_STORE_CLIENT_SECRET")
 BOOK_STORE_CODE_VERIFIER = os.getenv("BOOK_STORE_CODE_VERIFIER")
 BOOK_STORE_REDIRECT_URL = os.getenv("BOOK_STORE_REDIRECT_URL")
+
+OUATH2_PROVIDER = {
+    "SCOPES": {
+        "add-transaction": "Grant Access To Add Transaction to Account"
+    }
+}

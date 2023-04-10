@@ -23,6 +23,13 @@ class AccountSerializer(serializers.ModelSerializer):
             "password"
         ]
 
+    def validate(self, attrs):
+        if User.objects.filter(subscribe_arn=attrs["subscribe_arn"]).exists():
+            raise serializers.ValidationError(
+                "This Email Cannot be Added Contact Admin")
+
+        return attrs
+
     def __init__(self, instance=None, **kwargs):
         super().__init__(instance, **kwargs)
 
@@ -62,6 +69,10 @@ class AccountSerializer(serializers.ModelSerializer):
         instance.last_name = validated_data.get(
             "last_name", instance.last_name)
         instance.username = validated_data.get("username", instance.username)
+
+        if "email" in validated_data:
+            # Code to Unsubscribe old email and subscribe new one
+            ...
 
         instance.save()
 
