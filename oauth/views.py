@@ -18,7 +18,7 @@ from oauth2_provider.contrib.rest_framework.authentication import OAuth2Authenti
 from oauth2_provider.contrib.rest_framework.permissions import TokenHasScope
 
 from .forms import LoginForm
-from tracker.serializers import CreateTransactionSerializer
+from tracker.serializers import TrackSerializer
 from . import serializers
 
 
@@ -30,7 +30,7 @@ class AddTransaction(generics.CreateAPIView):
     authentication_classes = [OAuth2Authentication]
     permission_classes = [IsAuthenticated, TokenHasScope]
     required_scopes = ['add-transaction']
-    serializer_class = CreateTransactionSerializer
+    serializer_class = TrackSerializer
 
 
 class LoginOauthView(generic.FormView):

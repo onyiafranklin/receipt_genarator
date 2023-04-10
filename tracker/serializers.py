@@ -15,6 +15,7 @@ class TrackSerializer(serializers.ModelSerializer):
             "amount",
             "date",
         ]
+        read_only_fields = ["id"]
 
 
 class CreateTransactionSerializer(serializers.ModelSerializer):
