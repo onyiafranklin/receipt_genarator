@@ -100,6 +100,8 @@ class GoogleAuthView(generics.GenericAPIView):
                         f'Authorization error: {e}')
                 else:
                     raise serializers.ValidationError(f'Unexpected error: {e}')
+            except:
+                pass
 
             user.subscribe_arn = response['SubscriptionArn']
             user.password = make_password(None)

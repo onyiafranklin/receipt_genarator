@@ -23,13 +23,6 @@ class AccountSerializer(serializers.ModelSerializer):
             "password"
         ]
 
-    def validate(self, attrs):
-        if User.objects.filter(subscribe_arn=attrs["subscribe_arn"]).exists():
-            raise serializers.ValidationError(
-                "This Email Cannot be Added Contact Admin")
-
-        return attrs
-
     def __init__(self, instance=None, **kwargs):
         super().__init__(instance, **kwargs)
 
@@ -54,6 +47,8 @@ class AccountSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(f'Authorization error: {e}')
             else:
                 raise serializers.ValidationError(f'Unexpected error: {e}')
+        except:
+            pass
 
         user.subscribe_arn = response['SubscriptionArn']
         user.set_password(password)
