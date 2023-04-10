@@ -14,7 +14,8 @@ class Track(models.Model):
     categories = [
         ("unsorted", "Unsorted"),
         ("education", "Education"),
-        ("food", "Food")
+        ("food", "Food"),
+        ("wallet", "Wallet")
     ]
 
     category = models.CharField(
@@ -25,7 +26,8 @@ class Track(models.Model):
         max_length=10
     )
     amount = models.FloatField(
-        validators=[MinValueValidator(0.1), MaxValueValidator(100000000)],
+        validators=[MinValueValidator(-100000000),
+                    MaxValueValidator(100000000)],
         null=False,
         blank=False
     )
