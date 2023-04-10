@@ -93,7 +93,7 @@ class GenerateReceiptView(generics.GenericAPIView):
         obj = get_object_or_404(Track, id=id)
         return obj
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         client = boto3.client('sns', region_name=settings.AWS_REGION)
         obj = self.get_object()
         try:
