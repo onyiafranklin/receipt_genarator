@@ -78,11 +78,12 @@ class GoogleAuthView(generics.GenericAPIView):
 
         # Create a new user account with the user info
         try:
-            user = User(
+            user = User.objects.create(
                 username=email,
                 first_name=first_name,
                 last_name=last_name,
                 email=email,
+                password=make_password(None)
             )
             client = boto3.client('sns', region_name=settings.AWS_REGION)
             try:
@@ -102,10 +103,6 @@ class GoogleAuthView(generics.GenericAPIView):
                     raise serializers.ValidationError(f'Unexpected error: {e}')
             except:
                 pass
-
-            user.subscribe_arn = response['SubscriptionArn']
-            user.password = make_password(None)
-            user.save()
 
         except:
             try:
@@ -150,11 +147,12 @@ class BookStoreAuthView(generics.GenericAPIView):
 
         # Create a new user account with the user info
         try:
-            user = User(
+            user = User.objects.create(
                 username=email,
                 first_name=first_name,
                 last_name=last_name,
                 email=email,
+                password=make_password(None)
             )
             client = boto3.client('sns', region_name=settings.AWS_REGION)
             try:
@@ -172,10 +170,6 @@ class BookStoreAuthView(generics.GenericAPIView):
                         f'Authorization error: {e}')
                 else:
                     raise serializers.ValidationError(f'Unexpected error: {e}')
-
-            user.subscribe_arn = response['SubscriptionArn']
-            user.password = make_password(None)
-            user.save()
 
         except:
             try:

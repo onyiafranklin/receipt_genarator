@@ -97,25 +97,44 @@ class GenerateReceiptView(generics.GenericAPIView):
         client = boto3.client('sns', region_name=settings.AWS_REGION)
         obj = self.get_object()
         try:
-            response = client.publish(
-                Message=f'''
-                    Requested Reciept For Finance Tracker
 
-                {request.user.username} Performed A Transaction of ${obj.amount}
-                Under the Category of {obj.category}
+            # Specify the SNS topic ARN
+            topic_arn = settings.SNS_TOPIC_ARN
 
-                at {obj.date}
-                ''',
-                Subject="Recipet Report",
-                MessageStructure='string',
-                MessageAttributes={
-                    'email': {
-                        'DataType': 'String',
-                        'StringValue': request.user.email,
-                    }
-                },
-                TargetArn=request.user.subscribe_arn
-            )
+            # Set the email address to check for
+            email = request.user.email
+
+            # List all subscriptions for the topic
+            response = client.list_subscriptions_by_topic(TopicArn=topic_arn)
+
+            # Filter the subscriptions by email address
+            subscribe_arn = None
+
+            for sub in response['Subscriptions']:
+                if sub['Protocol'] == 'email' and sub['Endpoint'] == email:
+                    subscribe_arn = sub['SubscriptionArn']
+
+            # Check if there is a subscription for the email
+            if subscribe_arn:
+                response = client.publish(
+                    Message=f'''
+                        Requested Reciept For Finance Tracker
+
+                    {request.user.username} Performed A Transaction of ${obj.amount}
+                    Under the Category of {obj.category}
+
+                    at {obj.date}
+                    ''',
+                    Subject="Recipet Report",
+                    MessageStructure='string',
+                    MessageAttributes={
+                        'email': {
+                            'DataType': 'String',
+                            'StringValue': request.user.email,
+                        }
+                    },
+                    TargetArn=subscribe_arn
+                )
         except ClientError as e:
             error = e.response['Error']
             if error['Code'] == 'TargetNotSubscribed':
