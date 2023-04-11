@@ -17,6 +17,11 @@ class TrackSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["id"]
 
+    def validate(self, attrs):
+        attrs["user"] = self.context["request"].user
+
+        return attrs
+
 
 class CreateTransactionSerializer(serializers.ModelSerializer):
 
