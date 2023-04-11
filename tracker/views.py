@@ -144,6 +144,6 @@ class GenerateReceiptView(generics.GenericAPIView):
             else:
                 # Other error occurred
                 error_message = f'{error["Code"]}: {error["Message"]}'
-                return Response({'success': False, 'error': error_message})
+                return Response({'success': False, 'error': error_message, "arn": subscribe_arn})
 
         return Response({"success": True, "message": "Reciept Has been Sent to your email"}, status=status.HTTP_200_OK)
