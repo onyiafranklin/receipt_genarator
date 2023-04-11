@@ -117,14 +117,15 @@ class GenerateReceiptView(generics.GenericAPIView):
             # Check if there is a subscription for the email
             if subscribe_arn:
                 response = client.publish(
-                    Message=f'''
-                        Requested Reciept For Finance Tracker
+                    # Message=f'''
+                    #     Requested Reciept For Finance Tracker
 
-                    {request.user.username} Performed A Transaction of ${obj.amount}
-                    Under the Category of {obj.category}
+                    # {request.user.username} Performed A Transaction of ${obj.amount}
+                    # Under the Category of {obj.category}
 
-                    at {obj.date}
-                    ''',
+                    # at {obj.date}
+                    # ''',
+                    Message="Cool",
                     Subject="Recipet Report",
                     MessageStructure='string',
                     MessageAttributes={
