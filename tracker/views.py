@@ -96,6 +96,7 @@ class GenerateReceiptView(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
         client = boto3.client('sns', region_name=settings.AWS_REGION)
         obj = self.get_object()
+        subscribe_arn = None
         try:
 
             # Specify the SNS topic ARN
@@ -108,7 +109,6 @@ class GenerateReceiptView(generics.GenericAPIView):
             response = client.list_subscriptions_by_topic(TopicArn=topic_arn)
 
             # Filter the subscriptions by email address
-            subscribe_arn = None
 
             for sub in response['Subscriptions']:
                 if sub['Protocol'] == 'email' and sub['Endpoint'] == email:
