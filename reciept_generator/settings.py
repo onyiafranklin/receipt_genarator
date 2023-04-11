@@ -147,7 +147,9 @@ REST_FRAMEWORK = {
 
 OAUTH2_PROVIDER = {
     # this is the list of available scopes
-    'SCOPES': {'add-application': 'Copy Histroy From wallet to Finance Tracker'}
+    'SCOPES': {
+        'add-transaction': 'Grant Access to Add Transaction to Account'
+    }
 }
 
 STATIC_URL = '/static/'
@@ -165,9 +167,3 @@ BOOK_STORE_CLIENT_ID = os.getenv("BOOK_STORE_CLIENT_ID")
 BOOK_STORE_CLIENT_SECRET = os.getenv("BOOK_STORE_CLIENT_SECRET")
 BOOK_STORE_CODE_VERIFIER = os.getenv("BOOK_STORE_CODE_VERIFIER")
 BOOK_STORE_REDIRECT_URL = os.getenv("BOOK_STORE_REDIRECT_URL")
-
-OUATH2_PROVIDER = {
-    "SCOPES": {
-        "add-transaction": "Grant Access To Add Transaction to Account"
-    }
-}
