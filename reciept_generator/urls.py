@@ -8,5 +8,5 @@ urlpatterns = [
     path('account/', include('account.urls')),
     path('transaction/', include('tracker.urls')),
     path('oauth/', include('oauth.urls')),
-    path('health/', HealthCheckView.as_view(), name="health")
+    path('', HealthCheckView.as_view(), name="health")
 ]
