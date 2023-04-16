@@ -10,6 +10,6 @@ urlpatterns = [
     path("authorize/", AuthorizationView.as_view(), name="oauth-authoize"),
     path("token/", TokenView.as_view(), name="token"),
     path("login/", views.LoginOauthView.as_view(), name="oauth-login"),
-    path("bookstore-auth/", views.BookStoreAuthView.as_view(), name="bookstore-auth"),
+    path("wallet-auth/", views.WalletAuthView.as_view(), name="bookstore-auth"),
     path("google-auth/", views.GoogleAuthView.as_view(), name="google-auth")
 ]
