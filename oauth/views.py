@@ -3,9 +3,8 @@ import boto3
 from botocore.exceptions import ClientError
 
 from django.views import generic
-from django.shortcuts import redirect
 from django.conf import settings
-from django.contrib.auth import login, authenticate, get_user_model
+from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 
 from rest_framework import generics
@@ -38,16 +37,15 @@ class LoginOauthView(generic.FormView):
     template_name = "login.html"
     form_class = LoginForm
 
-    def form_valid(self, form):
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["request"] = self.request
 
-        username = form.cleaned_data["username"]
-        password = form.cleaned_data["password"]
+        return kwargs
 
-        user = authenticate(self.request, username=username, password=password)
+    def get_success_url(self):
 
-        login(self.request, user=user)
-
-        return redirect(self.request.GET["next"])
+        return self.request.GET["next"]
 
 
 class GoogleAuthView(generics.GenericAPIView):
@@ -118,8 +116,8 @@ class GoogleAuthView(generics.GenericAPIView):
         return Response(response, status=status.HTTP_200_OK)
 
 
-class BookStoreAuthView(generics.GenericAPIView):
-    serializer_class = serializers.BookStoreAuthSerializer
+class WalletAuthView(generics.GenericAPIView):
+    serializer_class = serializers.WalletAuthSerializer
 
     def post(self, request):
         serializer = self.get_serializer(data=self.request.data)
@@ -130,7 +128,7 @@ class BookStoreAuthView(generics.GenericAPIView):
         access_token = token_data['access_token']
 
         user_response = requests.get(
-            f'http://booksoreapi-env.eba-3igtf73b.us-east-1.elasticbeanstalk.com/oauth/userinfo/',
+            f'http://wallet-env.eba-gr5bgv3s.eu-north-1.elasticbeanstalk.com/oauth/userinfo/',
             headers={
                 'Authorization': f'Bearer {access_token}'
             }
@@ -138,7 +136,7 @@ class BookStoreAuthView(generics.GenericAPIView):
 
         if user_response.status_code != 200:
             # Return an error response if user info retrieval fails
-            return Response({'error': 'Failed to retrieve user info from Bookstore'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Failed to retrieve user info from Wallet'}, status=status.HTTP_400_BAD_REQUEST)
 
         user_data = user_response.json()
         email = user_data.get('email')
@@ -175,7 +173,7 @@ class BookStoreAuthView(generics.GenericAPIView):
             try:
                 user = User.objects.get(email=email)
             except User.DoesNotExist:
-                return Response({'error': 'Failed to authenticate user from BookStore'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error': 'Failed to authenticate user from Wallet'}, status=status.HTTP_400_BAD_REQUEST)
 
         token, _ = Token.objects.get_or_create(user=user)
         response = {

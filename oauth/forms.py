@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth import authenticate, login
+from django.core.exceptions import ValidationError
 
 
 class LoginForm(forms.Form):
@@ -13,3 +15,18 @@ class LoginForm(forms.Form):
             "placeholder": "Username"
         }
     ), max_length=60)
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        username = self.cleaned_data["username"]
+        password = self.cleaned_data["password"]
+
+        user = authenticate(self.request, username=username, password=password)
+
+        if not user:
+            raise ValidationError("Invalid Credentials")
+
+        login(self.request, user)

@@ -148,7 +148,7 @@ REST_FRAMEWORK = {
 OAUTH2_PROVIDER = {
     # this is the list of available scopes
     'SCOPES': {
-        'add-transaction': 'Grant Access to Add Transaction to Account'
+        'add-transaction': 'Grant Access to Add Transaction to Account',
     }
 }
 
@@ -167,3 +167,9 @@ BOOK_STORE_CLIENT_ID = os.getenv("BOOK_STORE_CLIENT_ID")
 BOOK_STORE_CLIENT_SECRET = os.getenv("BOOK_STORE_CLIENT_SECRET")
 BOOK_STORE_CODE_VERIFIER = os.getenv("BOOK_STORE_CODE_VERIFIER")
 BOOK_STORE_REDIRECT_URL = os.getenv("BOOK_STORE_REDIRECT_URL")
+
+
+WALLET_CLIENT_ID = os.getenv("WALLET_CLIENT_ID")
+WALLET_CLIENT_SECRET = os.getenv("WALLET_CLIENT_SECRET")
+WALLET_CODE_VERIFIER = os.getenv("WALLET_CODE_VERIFIER")
+WALLET_REDIRECT_URL = os.getenv("WALLET_REDIRECT_URL")
