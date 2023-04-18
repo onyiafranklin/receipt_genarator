@@ -45,7 +45,7 @@ class LoginOauthView(generic.FormView):
 
     def get_success_url(self):
 
-        return self.request.GET["next"]
+        return self.request.GET.get("next")
 
 
 class GoogleAuthView(generics.GenericAPIView):
