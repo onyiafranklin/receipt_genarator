@@ -31,23 +31,23 @@ class AccountSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = self.Meta.model.objects.create_user(**validated_data)
-        client = boto3.client('sns', region_name=settings.AWS_REGION)
-        try:
-            response = client.subscribe(
-                TopicArn=settings.SNS_TOPIC_ARN, Protocol='email', Endpoint=user.email)
-        except ClientError as e:
-            if e.response['Error']['Code'] == 'InvalidParameter':
-                raise serializers.ValidationError(
-                    {'email': 'Invalid email address'})
-            elif e.response['Error']['Code'] == 'EndpointDisabled':
-                raise serializers.ValidationError(
-                    {'email': 'Email address is disabled'})
-            elif e.response['Error']['Code'] == 'AuthorizationError':
-                raise serializers.ValidationError(f'Authorization error: {e}')
-            else:
-                raise serializers.ValidationError(f'Unexpected error: {e}')
-        except:
-            pass
+        # client = boto3.client('sns', region_name=settings.AWS_REGION)
+        # try:
+        #     response = client.subscribe(
+        #         TopicArn=settings.SNS_TOPIC_ARN, Protocol='email', Endpoint=user.email)
+        # except ClientError as e:
+        #     if e.response['Error']['Code'] == 'InvalidParameter':
+        #         raise serializers.ValidationError(
+        #             {'email': 'Invalid email address'})
+        #     elif e.response['Error']['Code'] == 'EndpointDisabled':
+        #         raise serializers.ValidationError(
+        #             {'email': 'Email address is disabled'})
+        #     elif e.response['Error']['Code'] == 'AuthorizationError':
+        #         raise serializers.ValidationError(f'Authorization error: {e}')
+        #     else:
+        #         raise serializers.ValidationError(f'Unexpected error: {e}')
+        # except:
+        #     pass
 
         return user
 
